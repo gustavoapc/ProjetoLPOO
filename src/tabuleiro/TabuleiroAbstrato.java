@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
+import exceptions.ElementoInvalidoException;
+
+
 public abstract class TabuleiroAbstrato {
 	Random random = new Random(); // função random
 	 
@@ -85,6 +88,9 @@ public abstract class TabuleiroAbstrato {
 	public ArrayList<String> getRangeElementos() {
 		return rangeElementos;
 	}
+	
+	public abstract String[] getElementosDisponiveis();
+	
 
 	// numeros possiveis para colocar no tabuleiro random
 	public void criarRange(String[] elementosDisponiveis) {
@@ -293,7 +299,7 @@ public abstract class TabuleiroAbstrato {
 	public boolean ehTabuleirosIguais() {
 		for(int linha=0;linha<tamanhoGrid; linha++) {
 			for(int coluna=0;coluna<tamanhoGrid; coluna++) {
-				if(tabuleiroGabarito[linha][coluna] != tabuleiroCompletavel[linha][coluna]) {
+				if(!tabuleiroGabarito[linha][coluna].equals(tabuleiroCompletavel[linha][coluna])) {
 					return false;
 				}
 				
@@ -304,22 +310,44 @@ public abstract class TabuleiroAbstrato {
 	}
 	
 	
-	public void jogada(int linha, int coluna, String numero, String[][] tabuleiro) {
+	public void jogada(int linha, int coluna, String elemento, String[][] tabuleiro, String[] range) {
 			
-		if(numero == "") {
-			apagar(linha, coluna, numero, tabuleiro);
-		}else {
-			preencher(linha, coluna, numero, tabuleiro);
-				if(numeroRepeteTudo(linha, coluna, numero, tabuleiro)) {
+		if(elemento == "") {
+			apagar(linha, coluna, elemento, tabuleiro);
+			//colocar metodo que procure a string no array
+		}else{
+			try {
+				existeElemento(elemento, range);
+				preencher(linha, coluna, elemento, tabuleiro);
+				if(numeroRepeteTudo(linha, coluna, elemento, tabuleiro)) {
 					preencher(linha, coluna, "0", tabuleiro);
-					verErros(linha, coluna, numero);
+					verErros(linha, coluna, elemento);
 					//usar throws
 					System.out.println("numero repete");
 				}
+			}catch(ElementoInvalidoException e) {
+				System.out.println(e.getMessage());
+			}
+			
+			
 		}
 			
 		
 	}
+	
+	public void existeElemento(String elemento, String[] range) throws ElementoInvalidoException {
+		int e=0;
+		for(int i=0; i<range.length; i++) {
+			if(elemento.equals(range[i])) {
+				e++;
+			}
+		}
+		if(e==0) {
+			throw new ElementoInvalidoException("Elemento invalido");
+		}
+		
+	}
+	
 	
 	
 	
@@ -409,3 +437,7 @@ public abstract class TabuleiroAbstrato {
 		}
 }
 	
+
+
+
+

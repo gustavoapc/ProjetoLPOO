@@ -1,6 +1,6 @@
 package tabuleiro;
 
-public class Tabuleiro9x9 extends TabuleiroAbstrato {
+public class Tabuleiro9x9 extends Tabuleiro {
 
 	private final String[] elementosDisponiveis = {"1","2","3","4","5","6","7","8","9"};
 	
@@ -12,6 +12,9 @@ public class Tabuleiro9x9 extends TabuleiroAbstrato {
 	public String[] getElementosDisponiveis() {
 		return elementosDisponiveis;
 	}
+
+	
+	
 	
 	
 }

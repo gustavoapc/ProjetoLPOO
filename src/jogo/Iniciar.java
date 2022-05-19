@@ -1,5 +1,6 @@
 package jogo;
 
+
 import java.io.Serializable;
 import java.util.Scanner;
 
@@ -10,67 +11,112 @@ import tabuleiro.Tabuleiro12x12;
 import tabuleiro.TabuleiroHexadecimal;
 
 public class Iniciar implements Serializable{
-	private Tabuleiro tabuleiro;
-
-	Scanner scan = new Scanner(System.in);
-	int linha,coluna, ajuda, escolha;
-	String numero;
+	private  Tabuleiro tabuleiro;
+	private  Scanner scan = new Scanner(System.in);
+	private  int linha,coluna, ajuda, escolha, dificuldade;
+	private  String numero;
 
 	public Iniciar() {
+		escolherDificuldade();
 		escolherTabuleiro();
 		iniciarTabuleiro();
 		comecarJogo();
 	}
 
 	
-	private void iniciarTabuleiro() {
+	
+	
+	
+	private  void iniciarTabuleiro() {
 		tabuleiro.zerarString(tabuleiro.getTabuleiroGabarito(), "0");
 		tabuleiro.zerarString(tabuleiro.getErrosEspaço(), " ");
 		tabuleiro.randomTabuleiro(tabuleiro.getTabuleiroGabarito(), tabuleiro.getElementosDisponiveis());
 		tabuleiro.copiarTabuleiro(tabuleiro.getTabuleiroGabarito(), tabuleiro.getTabuleiroCompletavel());
-		//tabuleiro.mostrarTabuleiro(tabuleiro.getTabuleiroGabarito());
 		tabuleiro.ocultandoTabuleiro(tabuleiro.getTabuleiroCompletavel());
-		
 		tabuleiro.zerarString(tabuleiro.getErrosEspaço(), " ");
+		
+	}
+	
+	private  void escolherTabuleiro() {
+		
+		System.out.println("1-Tabuleiro 9x9 \n2-Tabuleiro 12x12\n3-Tabuleiro Hexadecimal");
+		
+		switch(scanOpcoes()) {
+		case 1:
+			tabuleiro = new Tabuleiro9x9(dificuldade);
+			
+			break;
+
+		case 2: 
+			tabuleiro = new Tabuleiro12x12(dificuldade*2);
+		
+			break;
+			
+		case 3:
+			tabuleiro = new TabuleiroHexadecimal(dificuldade*3);
+			
+			break;
+		}
 		
 		
 	}
 	
-	private void escolherTabuleiro() {
-        System.out.println("1-Tabuleiro 9x9 \n2-Tabuleiro 12x12\n3-Tabuleiro Hexadecimal 4- Resgatar Jogo");
-        escolha = scan.nextInt();
-        switch(escolha) {
-        case 1:
-            tabuleiro = new Tabuleiro9x9();
+	private void escolherDificuldade() {
+		System.out.println("---------SUDOKU---------");
+		System.out.println();
+		System.out.println("Escolha a Dificuldade:");
+		System.out.println("1-FÁCIL");
+		System.out.println("2-MÉDIO");
+		System.out.println("3-DIFÍCIL");
+		switch(scanOpcoes()) {
+		case 1:
+			dificuldade = 38;
+			
+			break;
 
-            break;
-
-        case 2: 
-            tabuleiro = new Tabuleiro12x12();
-
-            break;
-
-        case 3:
-            tabuleiro = new TabuleiroHexadecimal();
-
-            break;
-        
-        default:
-        	System.out.println("Opção Invalida");
-        	escolherTabuleiro();
-        
-        	
-        }
-    }	
-	
-	private void comecarJogo() {
+		case 2: 
+			dificuldade = 46;
+			
 		
-		while(!tabuleiro.ehTabuleirosIguais()) {
+			break;
+			
+		case 3:
+			dificuldade = 58;
+			
+			break;
+		}
+	}
+	
+	private int scanOpcoes() {
+		escolha = scan.nextInt();
+		switch(escolha) {
+		case 1:
+			return escolha;
+
+		case 2: 
+			return escolha;
+			
+			
+		case 3:
+			return escolha;
+			
+		default:
+			System.out.println("Digite um valor valido");
+			scanOpcoes();
+		}
+		return escolha;
+		
+		
+	}
+	
+	private  void comecarJogo() {
+		
+		while(!tabuleiro.ehSudokuResolvido()) {
 			tabuleiro.mostrarTabuleiro(tabuleiro.getTabuleiroCompletavel());
 			System.out.println("Digite a linha:");
-			linha = scan.nextInt();
+			linha = scan.nextInt()-1;
 			System.out.println("Digite a coluna:");
-			coluna = scan.nextInt();
+			coluna = scan.nextInt()-1;
 
 			if(tabuleiro.espaçoValido(linha, coluna)) {
 				System.out.println("Vai querer ajuda? (0/1) ");
@@ -89,14 +135,11 @@ public class Iniciar implements Serializable{
 				}
 			}else System.out.println("espaço invalido");
 		}
+		tabuleiro.mostrarTabuleiro(tabuleiro.getTabuleiroCompletavel());
 		System.out.println("parabens");
 	}
 
-	
-		
-  
 
-     
 
 
 }
